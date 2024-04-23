@@ -1,5 +1,8 @@
 package com.example.demo.auth;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,7 +37,9 @@ public class AuthenticationService
 		        .role(Role.ADMIN)
 		        .build();
 		userRep.save(admin);
-	    var jwtToken = jwtService.generateToken(admin);
+		Map<String, Object> extraClaims=new HashMap<>();
+		extraClaims.put("id", admin.getId());
+	    var jwtToken = jwtService.generateToken(extraClaims, admin);
 	    return AuthenticationResponse.builder()
 	    		.token(jwtToken)
 	    		.build();
@@ -51,7 +56,9 @@ public class AuthenticationService
 		        .role(Role.RECRUITER)
 		        .build();
 		userRep.save(recruiter);
-	    var jwtToken = jwtService.generateToken(recruiter);
+		Map<String, Object> extraClaims=new HashMap<>();
+		extraClaims.put("id", recruiter.getId());
+	    var jwtToken = jwtService.generateToken(extraClaims, recruiter);
 	    return AuthenticationResponse.builder()
 	    		.token(jwtToken)
 	    		.build();
@@ -68,7 +75,9 @@ public class AuthenticationService
 		        .role(Role.CANDIDATE)
 		        .build();
 		userRep.save(candidate);
-	    var jwtToken = jwtService.generateToken(candidate);
+		Map<String, Object> extraClaims=new HashMap<>();
+		extraClaims.put("id", candidate.getId());
+	    var jwtToken = jwtService.generateToken(extraClaims, candidate);
 	    return AuthenticationResponse.builder()
 	    		.token(jwtToken)
 	    		.build();
@@ -81,7 +90,9 @@ public class AuthenticationService
 		);
 		var user = userRep.findByEmail(request.getEmail())
 		        .orElseThrow();
-		var jwtToken = jwtService.generateToken(user);
+		Map<String, Object> extraClaims=new HashMap<>();
+		extraClaims.put("id", user.getId());
+		var jwtToken = jwtService.generateToken(extraClaims, user);
 		return AuthenticationResponse.builder()
 				.token(jwtToken)
 				.build();

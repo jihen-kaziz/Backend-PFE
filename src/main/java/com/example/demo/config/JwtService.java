@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.model.User;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -26,11 +24,6 @@ public class JwtService
 	
 	@Value("${application.security.jwt.expiration}")
 	private long jwtExpiration;
-	
-	public long extractId(UserDetails userDetails) 
-	{
-	        return ((User) userDetails).getId();
-	}
 	
 	public String extractUsername(String token) 
 	{
@@ -55,12 +48,10 @@ public class JwtService
 	
 	private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long jwtExpiration)
 	{
-		long id=extractId(userDetails);
 		return Jwts
 	            .builder()
 	            .setClaims(extraClaims)
 	            .setSubject(userDetails.getUsername())
-	            .claim("id", id)
 	            .claim("authorities", userDetails.getAuthorities())
 	            .setIssuedAt(new Date(System.currentTimeMillis()))
 	            .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
